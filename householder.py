@@ -7,6 +7,18 @@ def householder(X, Y):
     H = I - 2.0 * U.dot(U.T)
     return H
 
-X = np.array([[3],[4],[0]])
-Y = np.array([[0],[0],[5]])
-print(householder(X, Y))
+def mul_householder(X, H):
+    return H.dot(X)
+
+def mul_householder_optimized(X, I, J):
+    I = np.array([[3], [4], [0]])
+    J = np.array([[0], [0], [5]])
+    U = (I - J) / np.linalg.norm(I - J)
+    Z = X - 2 * U.dot(U.T.dot(X))
+    return Z
+
+I = np.array([[3], [4], [0]])
+J = np.array([[0], [0], [5]])
+X = np.array([[7], [9], [0]])
+print(mul_householder(X, householder(I, J)))
+print(mul_householder_optimized(X, I, J))
