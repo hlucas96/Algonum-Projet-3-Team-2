@@ -19,7 +19,7 @@ def mul_householder_optimized(X, I, J):
 
 def plot_householder():
     max_size = 500
-    xaxis = np.arange(1, max_size, 10)
+    xaxis = np.arange(1, max_size, 5)
     execute_time_n = []
     execute_time_o = []
     I = np.zeros(max_size)
