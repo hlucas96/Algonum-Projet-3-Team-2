@@ -39,10 +39,25 @@ def plot_householder():
     l_h_o, = plt.plot(xaxis, execute_time_o, linewidth = 1.0)
     plt.legend([l_h_n, l_h_o], ["householder", "householder_optimized"])
     plt.show()
+
+def householder_test():
+    I = np.array([[3], [4], [0]])
+    J = np.array([[0], [0], [5]])
+    X = np.array([[3, 4, 7], [4, 7, 9], [0, 0, 0]])
+
+    print("householder test:")
+    print("householder matrix:")
+    print(householder(I, J))
     
-I = np.array([[3], [4], [0]])
-J = np.array([[0], [0], [5]])
-X = np.array([[3, 4, 7], [4, 7, 9], [0, 0, 0]])
-print(mul_householder(X, I, J))
-print(mul_householder_optimized(X, I, J))
-plot_householder()
+    print("apply to:")
+    print(X)
+
+    print("non-optimized householder:")
+    print(mul_householder(X, I, J))
+    print("optimized householder:")
+    print(mul_householder_optimized(X, I, J))
+
+    print("plot of the execute time ongoing...")
+    plot_householder()
+
+householder_test()
