@@ -25,6 +25,6 @@ def matrix_to_picture(R,V,B):
     pl.imshow(M)
     pl.show()
 
-#Exemple
+#Example
 R,V,B = picture_to_matrix("essai.png")
 matrix_to_picture(R, V, B)
