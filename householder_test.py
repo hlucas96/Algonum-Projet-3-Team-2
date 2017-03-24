@@ -5,18 +5,20 @@ import numpy as np
 import householder as hh
 
 def plot_householder():
-    max_size = 500
+    max_size = 1000
     xaxis = np.arange(1, max_size, 5)
     execute_time_n = []
     execute_time_o = []
     I = np.zeros(max_size)
+    I.shape = (max_size, 1)
     J = np.ones(max_size)
-    X = np.ones(max_size)
+    J.shape = (max_size, 1)
+    X = np.ones((max_size,max_size))
     for h in xaxis:
         t_a = time.time()
-        hh.mul_householder(X[:h],I[:h], J[:h])
+        hh.mul_householder(X[0:h,0:h],I[:h], J[:h])
         t_b = time.time()
-        hh.mul_householder_optimized(X[:h],I[:h], J[:h])
+        hh.mul_householder_optimized(X[0:h, 0:h],I[:h], J[:h])
         t_c = time.time()
         execute_time_n.append(t_b - t_a)
         execute_time_o.append(t_c - t_b)
