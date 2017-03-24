@@ -1,19 +1,34 @@
 import numpy as np
 import householder as hh
 
-def apply_householder(X, I, J, i):
+#apply_householder without
+def apply_householder(X, I, J, i, pos):
     n, m = X.shape
-    U_t = (I - J) / np.linalg.norm(I - J)
-    U = implant(n, m, U_t, i)
+    if ( i != 0):
+        Y = np.zeros((n,1))
+        W = np.zeros((n,1))
+        Y[i:n] = I
+        W[i:n] = J
+    else:
+        Y = I
+        W = J
+        
+    U = (Y - W) / np.linalg.norm(Y - W)
+    if (pos == 0) : 
+        S = mul_householder_left(X, U)
+    else:
+        S = mul_householder_right(X, U)
+    print(S)
+    return S
+
+def mul_householder_right(X, U):
     S = X - 2 * U.dot(U.T.dot(X))
     return S
 
-def implant(n, m, Q, i):
-    I = np.identity(n)
-    for k in range (i, n, 1):
-        for l in range (i, m, 1):
-            I[k][l] = Q[k - i][l - i]
-    return I
+def mul_householder_left(X, U):
+    S = X - X.dot(2 * U.dot(U.T))
+    return S
+
 
 def norme(X):
     n = 0
@@ -34,10 +49,8 @@ def bi_diagonal(A):
         Y[0] = norme(X)
         Y.shape = (n - i, 1)
         
-        #Q1_t = hh.householder(X, Y)
-        #Q1 = implant(n, m, Q1_t, i)
-        #Qleft = Qleft.dot(Q1)
-        BD  = apply_householder(BD, X, Y, i)
+        Qleft = apply_householder(Qleft, X, Y, i, 0)
+        BD  = apply_householder(BD, X, Y, i, 1)
         if (i != m - 2):
             X = np.copy(BD[i, (i + 1):m])
             X.shape = (m - i - 1, 1)
@@ -46,15 +59,14 @@ def bi_diagonal(A):
             Y[0] = norme(X)
             Y.shape = (m - i - 1, 1)
             
-            #Q2_t = hh.householder(X, Y)
-            #Q2 = implant(n, m, Q2_t, i + 1)
-            #Qright = Qright.dot(Q2)
-            
-            BD  = apply_householder(BD.T, X, Y, i + 1)
+            Qright = apply_householder(Qright, X, Y, i + 1, 1) 
+            BD  = apply_householder(BD, X, Y, i + 1, 0)
+        print("BD")
+        print(np.round(BD, 2))
     return (Qleft, BD, Qright)
 
 
-A = np.array([[1, 2, 3], [4, 5, 9], [7, 8, 9]])
+A = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3]])
 Qleft, BD, Qright = bi_diagonal(A)
 print(A)
 print(np.round(BD, 2))
