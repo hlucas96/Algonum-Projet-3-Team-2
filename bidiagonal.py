@@ -1,7 +1,7 @@
 import numpy as np
 import householder as hh
 
-#apply_householder without
+#apply_householder to the X matrix 
 def apply_householder(X, I, J, i, pos):
     n, m = X.shape
     if ( i != 0):
@@ -18,30 +18,35 @@ def apply_householder(X, I, J, i, pos):
         S = mul_householder_left(X, U)
     else:
         S = mul_householder_right(X, U)
-    print(S)
     return S
 
+#apply scalar product between householder(I, J) and X
 def mul_householder_right(X, U):
     S = X - 2 * U.dot(U.T.dot(X))
     return S
 
+#apply scalar product between X and householder(I, J)
 def mul_householder_left(X, U):
     S = X - X.dot(2 * U.dot(U.T))
     return S
 
 
+#calculate the norme of the vector X
 def norme(X):
     n = 0
     for i in range(0, len(X), 1):
         n = n + np.square(X[i])
     return np.sqrt(n)
 
-def bi_diagonal(A):
+#divide the A matrix into: Qleft, BD(bidiagonal matrix), Qright with: Qleft * BD * Qright = A
+#debug is a flag to know if we are in debug mode or not
+def bi_diagonal(A, Debug):
     BD = A
     n, m = A.shape
     Qleft = np.identity(n)
     Qright = np.identity(n)
     for i in range (0, n - 1, 1):
+        #put the i column to zero
         X = np.copy(BD[i:n, i])
         X.shape = (n - i, 1)
         
@@ -52,6 +57,7 @@ def bi_diagonal(A):
         Qleft = apply_householder(Qleft, X, Y, i, 0)
         BD  = apply_householder(BD, X, Y, i, 1)
         if (i != m - 2):
+            #put the i line to zero
             X = np.copy(BD[i, (i + 1):m])
             X.shape = (m - i - 1, 1)
 
@@ -61,13 +67,12 @@ def bi_diagonal(A):
             
             Qright = apply_householder(Qright, X, Y, i + 1, 1) 
             BD  = apply_householder(BD, X, Y, i + 1, 0)
-        print("BD")
-        print(np.round(BD, 2))
+        if(Debug == 1):
+            #test if the invariant is still right at the end of each loop
+            if(np.isclose(Qleft.dot(BD).dot(Qright),A).all()):
+                print(".")
+            else:
+                print("!")
+            
     return (Qleft, BD, Qright)
 
-
-A = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3]])
-Qleft, BD, Qright = bi_diagonal(A)
-print(A)
-print(np.round(BD, 2))
-print(Qleft.dot(BD).dot(Qright))
