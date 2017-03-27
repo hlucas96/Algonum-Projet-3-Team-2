@@ -24,7 +24,3 @@ def matrix_to_picture(R,V,B):
             M[i][j][0],M[i][j][1],M[i][j][2] = R[i][j],V[i][j],B[i][j]
     pl.imshow(M)
     pl.show()
-
-#Example
-R,V,B = picture_to_matrix("essai.png")
-matrix_to_picture(R, V, B)
