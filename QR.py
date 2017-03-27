@@ -12,6 +12,7 @@ def transfo_QR(BD, Nmax):
         S = R2
         U = U.dot(Q2)
         V = np.transpose(Q1).dot(V)
+        print(s)
 
         USV = (U.dot(S)).dot(V)
         for j in range (0, n):
@@ -20,5 +21,5 @@ def transfo_QR(BD, Nmax):
 
     return U, S, V
 
-#BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
-#U, S, V = transfo_QR(BD, 10**3)
+BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
+U, S, V = transfo_QR(BD, 10**3)
