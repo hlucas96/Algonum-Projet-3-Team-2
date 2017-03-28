@@ -2,16 +2,18 @@ import numpy as np
 import pylab as pl
 import QR as qr
 import convert_picture as conv
+import bidiagonal as bi
 
 
 ##Compresse un matrice carre M au rang k
 def compress(M, k):
     n = len(M)
-    U, S, V = qr.transfo_QR(M, n)
+    QL, BD, QR = bi.bi_diagonal(M, 0)
+    U, S, V = qr.transfo_QR(BD, n)
     if (k < n):
         for i in range(k + 1, n + 1):
             S[i][i] = 0
-    res = np.dot(np.dot(U, S), V)
+    res = np.dot(QL,np.dot(U, np.dot(s, np.dot(V, QR))))
     return res
 
 ##Definition de la norme comme l'element maximal de la matrice

@@ -12,7 +12,6 @@ def transfo_QR(BD, Nmax):
         S = R2
         U = U.dot(Q2)
         V = np.transpose(Q1).dot(V)
-        print(s)
 
         USV = (U.dot(S)).dot(V)
         for j in range (0, n):
