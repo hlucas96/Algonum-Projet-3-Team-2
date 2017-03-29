@@ -11,9 +11,10 @@ def plot_householder():
     xaxis = np.arange(1, max_size, 5)
     execute_time_n = []
     execute_time_o = []
-    I = np.zeros((max_size,1))
-    J = np.ones((max_size,1))
-    X = np.ones((max_size,max_size))
+    I = np.random.randint(max_size, size =(max_size,1))
+    J = np.zeros((max_size, 1))
+    J[0] = hh.norme(I)
+    X = np.random.randint(max_size, size = (max_size, max_size))
     for h in xaxis:
         t_a = time.time()
         hh.mul_householder(X[0:h,0:h],I[:h], J[:h])
