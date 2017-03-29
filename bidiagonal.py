@@ -30,14 +30,6 @@ def mul_householder_left(X, U):
     S = X - X.dot(2 * U.dot(U.T))
     return S
 
-
-#calculate the norme of the vector X
-def norme(X):
-    n = 0
-    for i in range(0, len(X), 1):
-        n = n + np.square(X[i])
-    return np.sqrt(n)
-
 #divide the A matrix into: Qleft, BD(bidiagonal matrix), Qright with: Qleft * BD * Qright = A
 #debug is a flag to know if we are in debug mode or not
 def bi_diagonal(A, Debug):
@@ -51,7 +43,7 @@ def bi_diagonal(A, Debug):
         X.shape = (n - i, 1)
         
         Y = np.zeros(n - i)
-        Y[0] = norme(X)
+        Y[0] = hh.norme(X)
         Y.shape = (n - i, 1)
         
         Qleft = apply_householder(Qleft, X, Y, i, 0)
@@ -62,7 +54,7 @@ def bi_diagonal(A, Debug):
             X.shape = (m - i - 1, 1)
 
             Y = np.zeros(m - i - 1)
-            Y[0] = norme(X)
+            Y[0] = hh.norme(X)
             Y.shape = (m - i - 1, 1)
             
             Qright = apply_householder(Qright, X, Y, i + 1, 1) 
@@ -70,9 +62,9 @@ def bi_diagonal(A, Debug):
         if(Debug == 1):
             #test if the invariant is still right at the end of each loop
             if(np.isclose(Qleft.dot(BD).dot(Qright),A).all()):
-                print(".")
+                print(".", end=" ")
             else:
-                print("!")
+                print("!", end=" ")
             
     return (Qleft, BD, Qright)
 

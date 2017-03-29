@@ -4,15 +4,15 @@ import numpy as np
 
 import householder as hh
 
+
+#plot execute time of optmized and non-optimized function
 def plot_householder():
     max_size = 1000
     xaxis = np.arange(1, max_size, 5)
     execute_time_n = []
     execute_time_o = []
-    I = np.zeros(max_size)
-    I.shape = (max_size, 1)
-    J = np.ones(max_size)
-    J.shape = (max_size, 1)
+    I = np.zeros((max_size,1))
+    J = np.ones((max_size,1))
     X = np.ones((max_size,max_size))
     for h in xaxis:
         t_a = time.time()
@@ -32,21 +32,40 @@ def plot_householder():
 
 
 def householder_test():
-    I = np.array([[1], [1], [1]])
-    J = np.array([[0], [0], [1]])
-    X = np.array([[3, 4, 7], [4, 7, 9], [0, 0, 0]])
+    print("test on random vector with different sizes of:")
+    print("householder function")
+    print("mul_householder function")
+    print("mul_householder_optimized function")
 
-    print("householder test:")
-    print("householder matrix:")
-    print(hh.householder(I, J))
-    print("apply to:")
-    print(X)
+    n = 10
+    for i in range(2, n):
+        #create random vector
+        I = np.random.rand(i)
+        I.shape = (i, 1)
+        
+        J = np.zeros(i)
+        J[i-1] = hh.norme(I)
+        J.shape = (i, 1)
 
-    print("non-optimized householder:")
-    print(hh.mul_householder(X, I, J))
-    print("optimized householder:")
-    print(hh.mul_householder_optimized(X, I, J))
+        #test function householder
+        if (np.isclose((hh.householder(I, J)).dot(I), J).all()):
+            print(".", end= " ")
+        else:
+            print("!", end= " ")
 
+        #test function mul_householder
+        if (np.isclose(hh.mul_householder(I, I, J), J).all()):
+            print(".", end= " ")
+        else:
+            print("!", end= " ")
+
+        #test function mul_householder_optimized
+        if (np.isclose(hh.mul_householder_optimized(I, I, J), J).all()):
+            print(".", end= " ")
+        else:
+            print("!", end= " ")
+
+    print()
     print("plot of the execute time ongoing...")
     plot_householder()
 
