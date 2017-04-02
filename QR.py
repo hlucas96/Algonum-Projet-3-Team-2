@@ -125,7 +125,3 @@ def test_ordre():
     else:
         print("Error")
     
-
-test_ordre()
-test_diff_USV()
-convergence_S()
