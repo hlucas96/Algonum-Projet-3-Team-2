@@ -52,6 +52,9 @@ def ordre_vp(U, S):
     n = len(S)
     liste_vp = [i for i in np.diag(S)]
     liste_vp_decroissant = [i for i in np.diag(S)]
+    for i in range(len(liste_vp_decroissant)):
+        if (liste_vp_decroissant[i] < 0):
+            liste_vp_decroissant[i] *= -1
     liste_vp_decroissant = sorted(liste_vp_decroissant)[::-1]
     for i in range(1, n + 1):
         S[i - 1][i - 1] = liste_vp_decroissant[i - 1]
@@ -75,7 +78,7 @@ def calcul_termes_negligeable(BD, N):
     count = 0
     for i in range(n):
         for j in range(n):
-            if (S[i][j] < 10**(-3)):
+            if (i != j  and S[i][j] < 10**(-3)):
                 count += 1
     return count
 
@@ -128,6 +131,8 @@ def test_ordre():
     for i in range(len(BD)):
         for j in range(len(BD)):
             if (diff[i][j] > 10**(-3)):
+                count += 1
+            if (i == j and S[i][j] < 0):
                 count += 1
     print("Test odonnner les valeurs propres :")
     if (count == 0):
