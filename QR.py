@@ -80,7 +80,7 @@ def calcul_termes_negligeable(BD, N):
     return count
 
 def convergence_S():
-    BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
+    BD = np.array([[1, 2, 0, 0], [0, 3, 4,0], [0, 0, 5, 1], [0, 0, 0, 4]])
     x=np.arange(1,10**3, 10)
     y=np.arange(1,10**3, 10)
     for i in range(len(x)):
@@ -90,6 +90,16 @@ def convergence_S():
     plt.xlabel("Nombre d'itérations")
     plt.show()
     
+def test_S_diagonal():
+    BD = np.array([[1, 2, 0, 0], [0, 3, 4,0], [0, 0, 5, 1], [0, 0, 0, 4]])
+    U1, S1, V1 = transfo_USV(BD, 10**3)
+    for i in range(len(BD)):
+        for j in range(len(BD)):
+            if (i != j and not (S1[i][j] < 10**(-3))):
+                print("Error: S is not diagonal")
+                return
+    print("Success: S is diagonal")
+
     
 #Test de comparaison entre l'algorithme de base et l'agorithme amelioree
 def test_diff_USV():
