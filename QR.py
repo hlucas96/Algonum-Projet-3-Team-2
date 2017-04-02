@@ -13,7 +13,6 @@ def transfo_USV(BD, Nmax):
         S = R2
         U = U.dot(Q2)
         V = np.transpose(Q1).dot(V)
-        
     USV = (U.dot(S)).dot(V)
     for j in range (0, n):
         for k in range (0, n):
@@ -52,13 +51,15 @@ def transfo_USV_amelioree(BD, Nmax):
 
     
 #Trie decroissant des valeurs propres 
-def ordre_vp(U, S):
+def ordre_vp(U, S, V):
     n = len(S)
-    liste_vp = np.diag(S)
-    liste_vp_decroissant = np.sort(np.diag(S))[::-1]
+    liste_vp = [i for i in np.diag(S)]
+    liste_vp_decroissant = [i for i in np.diag(S)]
+    liste_vp_decroissant = sorted(liste_vp_decroissant)[::-1]
     for i in range(1, n + 1):
         S[i - 1][i - 1] = liste_vp_decroissant[i - 1]
-        U[:, i-1:i] *= liste_vp[i - 1] / liste_vp_decroissant[i - 1]
+        for j in range(n):
+            U[j][i-1] = U[j][i-1]*(liste_vp[i-1]/liste_vp_decroissant[i-1])
     return U, S
 
 ##############################TESTS###########################
@@ -74,23 +75,38 @@ def  test_USV(BD, Nmax):
     
 #Test de comparaison entre l'algorithme de base et l'agorithme améliorée
 def test_diff_USV():
-    BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
+    BD = np.array([[1, 2, 0, 0], [0, 3, 4,0], [0, 0, 5, 1], [0, 0, 0, 4]])
     U1, S1, V1 = transfo_USV(BD, 10**3)
     U2, S2, V2 = transfo_USV_amelioree(BD, 10**3)
-    print(U1)
-    print(U2)
+    diff = (np.dot(U1,S1)).dot(V1) - (np.dot(U2,S2)).dot(V2)
+    count = 0
+    for i in range(len(BD)):
+        for j in range(len(BD)):
+            if (diff[i][j] > 10**(-5)):
+                count += 1
+    print("Tests entre les algorithmes USV :")
+    print("Il y a ", count, "élément(s) de la surdiagonale perdu")
+    
 
 #Verification de la égalité USV = BD après tri
 def test_ordre():
-    BD = np.transpose(np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]]))
+    BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
     U, S, V = transfo_USV(BD, 10**3)
-    USV = (U.dot(S)).dot(V)
-    U1, S1 = ordre_vp(U, S)
-    USV = (U1.dot(S1)).dot(V)
+    U1, S1 = ordre_vp(U, S, V)
+    USV = (np.dot(U1,S1)).dot(V)
     n = len(U)
-    print(USV)
-    print(BD)
-    print("Success")
+    diff = USV - BD
+    count = 0
+    for i in range(len(BD)):
+        for j in range(len(BD)):
+            if (diff[i][j] > 10**(-5)):
+                count += 1
+    print("Test odonnner les valeurs propres :")
+    if (count == 0):
+        print("Success")
+    else:
+        print("Error")
     
-#test_diff_USV()
+
 test_ordre()
+test_diff_USV()
