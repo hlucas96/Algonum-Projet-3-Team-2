@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Algorithme USV
 def transfo_USV(BD, Nmax):
@@ -13,10 +14,6 @@ def transfo_USV(BD, Nmax):
         S = R2
         U = U.dot(Q2)
         V = np.transpose(Q1).dot(V)
-    USV = (U.dot(S)).dot(V)
-    for j in range (0, n):
-        for k in range (0, n):
-            assert(abs(USV[j][k] - BD[j][k]) < 10**(-3))
     return U, S, V
     
 #Decomposition QR pour une matrice bigonale
@@ -51,7 +48,7 @@ def transfo_USV_amelioree(BD, Nmax):
 
     
 #Trie decroissant des valeurs propres 
-def ordre_vp(U, S, V):
+def ordre_vp(U, S):
     n = len(S)
     liste_vp = [i for i in np.diag(S)]
     liste_vp_decroissant = [i for i in np.diag(S)]
@@ -72,8 +69,29 @@ def  test_USV(BD, Nmax):
         for k in range (0, n):
             assert(abs(USV[j][k] - BD[j][k]) < 1)
 
+def calcul_termes_negligeable(BD, N):
+    U, S, V = transfo_USV(BD, N)
+    n = len(S)
+    count = 0
+    for i in range(n):
+        for j in range(n):
+            if (S[i][j] < 10**(-3)):
+                count += 1
+    return count
+
+def convergence_S():
+    BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
+    x=np.arange(10,10**3, 10)
+    y=np.arange(10,10**3, 10)
+    for i in range(len(x)):
+        y[i] = calcul_termes_negligeable(BD, x[i])
+    p1=plt.plot(x, y)
+    plt.ylabel('Nombre de termes négligeables')
+    plt.xlabel("Nombre d'itérations")
+    plt.show()
     
-#Test de comparaison entre l'algorithme de base et l'agorithme améliorée
+    
+#Test de comparaison entre l'algorithme de base et l'agorithme amelioree
 def test_diff_USV():
     BD = np.array([[1, 2, 0, 0], [0, 3, 4,0], [0, 0, 5, 1], [0, 0, 0, 4]])
     U1, S1, V1 = transfo_USV(BD, 10**3)
@@ -88,11 +106,11 @@ def test_diff_USV():
     print("Il y a ", count, "élément(s) de la surdiagonale perdu")
     
 
-#Verification de la égalité USV = BD après tri
+#Verification de la egalité USV = BD apres tri
 def test_ordre():
     BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
     U, S, V = transfo_USV(BD, 10**3)
-    U1, S1 = ordre_vp(U, S, V)
+    U1, S1 = ordre_vp(U, S)
     USV = (np.dot(U1,S1)).dot(V)
     n = len(U)
     diff = USV - BD
@@ -110,3 +128,4 @@ def test_ordre():
 
 test_ordre()
 test_diff_USV()
+convergence_S()
