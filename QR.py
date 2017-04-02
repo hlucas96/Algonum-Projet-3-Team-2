@@ -27,7 +27,7 @@ def transfo_QR_bigonale(BD):
     Q = np.zeros((n,n))
     R = np.zeros((n,n))
     i = 0
-    while (i + 2 <= n):
+    while (i + 1 <= n):
         A = BD[i:i+2, i:i+2]
         q, r= np.linalg.qr(A)
         Q[i:i+2,i:i+2] = q[0:2,0:2]
