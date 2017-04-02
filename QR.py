@@ -81,8 +81,8 @@ def calcul_termes_negligeable(BD, N):
 
 def convergence_S():
     BD = np.array([[1, 2, 0], [0, 3, 4], [0, 0, 5]])
-    x=np.arange(10,10**3, 10)
-    y=np.arange(10,10**3, 10)
+    x=np.arange(1,10**3, 10)
+    y=np.arange(1,10**3, 10)
     for i in range(len(x)):
         y[i] = calcul_termes_negligeable(BD, x[i])
     p1=plt.plot(x, y)
@@ -117,7 +117,7 @@ def test_ordre():
     count = 0
     for i in range(len(BD)):
         for j in range(len(BD)):
-            if (diff[i][j] > 10**(-5)):
+            if (diff[i][j] > 10**(-3)):
                 count += 1
     print("Test odonnner les valeurs propres :")
     if (count == 0):
